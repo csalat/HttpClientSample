@@ -4,6 +4,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using CorrelationId;
+    using CorrelationId.Abstractions;
     using Microsoft.Extensions.Options;
 
     public class CorrelationIdDelegatingHandler : DelegatingHandler
@@ -23,9 +24,9 @@
             HttpRequestMessage request,
             CancellationToken cancellationToken)
         {
-            if (!request.Headers.Contains(this.options.Value.Header))
+            if (!request.Headers.Contains(this.options.Value.RequestHeader))
             {
-                request.Headers.Add(this.options.Value.Header, correlationContextAccessor.CorrelationContext.CorrelationId);
+                request.Headers.Add(this.options.Value.RequestHeader, correlationContextAccessor.CorrelationContext.CorrelationId);
             }
 
             // Else the header has already been added due to a retry.
